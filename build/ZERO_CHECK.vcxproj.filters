@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nikit\OneDrive\Рабочий стол\Hermes-configurable-web-server\build\CMakeFiles\2b11b30aacc9c6719b7632dc33fb0899\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B1AA88B9-316C-3E36-BEB6-9837313728B2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

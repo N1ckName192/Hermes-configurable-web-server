@@ -27,10 +27,10 @@ set(SOURCE_FILES
 )
 
 # Создание исполняемого файла
-add_executable(hermes ${SOURCE_FILES})
+add_executable(Hermes-configurable-web-server ${SOURCE_FILES})
 
 # Линковка Boost
-target_link_libraries(hermes 
+target_link_libraries(Hermes-configurable-web-server
     PRIVATE 
     Boost::system
     Boost::headers
