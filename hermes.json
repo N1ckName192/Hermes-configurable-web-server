@@ -1,0 +1,23 @@
+{
+    "http_port": 8080,
+    "proxy_port": 9090,
+    "static_root": "./public",
+    "routes": [
+        {
+            "path": "/",
+            "type": "static",
+            "target": "index.html"
+        },
+        {
+            "path": "/api",
+            "type": "proxy",
+            "target": "backend:3000"
+        }
+    ],
+    "tcp_proxies": [
+        {
+            "listen_port": 3306,
+            "target": "mysql-host:3306"
+        }
+    ]
+}

@@ -8,7 +8,7 @@
 namespace Hermes {
     struct RouteConfig {
         std::string path;
-        std::string handler_type; // "static", "proxy", "custom"
+        std::string handler_type;
         std::string target;
     };
 
