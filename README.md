@@ -75,10 +75,11 @@ Hermes построен на модульной архитектуре с чет
 - Низкоуровневых TCP-служб
 - Балансировки нагрузки
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/74319998-2f88-4709-b38d-a54d730a9817" alt="20250423_2131_Гермеc с веб-сервером_simple_compose_01jshykrs2e2vtpxyj1xpfnfb0" width="400"/>
-</div>
-
 ## Лицензия
 
 Свободно распространяемое ПО. Используйте на свой страх и риск.
+
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/74319998-2f88-4709-b38d-a54d730a9817" alt="20250423_2131_Гермеc с веб-сервером_simple_compose_01jshykrs2e2vtpxyj1xpfnfb0" width="400"/>
+</div>
