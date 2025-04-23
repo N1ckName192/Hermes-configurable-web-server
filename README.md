@@ -19,10 +19,10 @@ Hermes — это веб-сервер на C++, поддерживающий HTT
 - Boost 1.75.0 или выше
 
 ## Диаграмма объектов
-![bLHFRzCm5B_dKrZYG2he9E0MJPDWqbGaG5MBn05nC8sRMalZOBiT0oQj7O8BWYCINFW8qwPgXT7n5Unln7FYf4dQjLqkSTw_t-_z_5x4FerYp74VTK8i17hl87WUuSv-mDaWydTPo3XwqQEI99w7dBE3r7ZhGVAa2OpxX9VjHuue5zzZaNo6-mIAK1mMl3xfua4eD_6twJk2xjrt71f9mh](https://github.com/user-attachments/assets/49cfe325-2421-49d2-941e-ceadeaf48342)
+![d2 (6)](https://github.com/user-attachments/assets/0a8a423c-9936-4ffa-84e3-f0412e5db763)
 
 ## Схема классов
-![d2 (6)](https://github.com/user-attachments/assets/0a8a423c-9936-4ffa-84e3-f0412e5db763)
+![bLHFRzCm5B_dKrZYG2he9E0MJPDWqbGaG5MBn05nC8sRMalZOBiT0oQj7O8BWYCINFW8qwPgXT7n5Unln7FYf4dQjLqkSTw_t-_z_5x4FerYp74VTK8i17hl87WUuSv-mDaWydTPo3XwqQEI99w7dBE3r7ZhGVAa2OpxX9VjHuue5zzZaNo6-mIAK1mMl3xfua4eD_6twJk2xjrt71f9mh](https://github.com/user-attachments/assets/49cfe325-2421-49d2-941e-ceadeaf48342)
 
 ## Сборка
 
