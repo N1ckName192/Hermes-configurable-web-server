@@ -2,34 +2,42 @@
 #include "Hermes/Logger.h"
 #include <boost/beast.hpp>
 #include <thread>
+#include <iostream>
 
 namespace Hermes {
     HttpServer::HttpServer(boost::asio::io_context& io_context, 
                          const boost::asio::ip::tcp::endpoint& endpoint, 
                          Router& router)
-        : acceptor_(io_context, endpoint), router_(router) {
+        : io_context_(io_context)
+        , acceptor_(io_context, endpoint)
+        , router_(router) {
         LOG_INFO("HTTP server initialized on port " + std::to_string(endpoint.port()));
     }
 
     void HttpServer::start() {
         LOG_INFO("HTTP server started");
-        accept_connections();
+        acceptConnections();
     }
 
-    void HttpServer::accept_connections() {
-        acceptor_.async_accept([this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
-            if (!ec) {
-                LOG_INFO("New HTTP connection from " + 
-                        socket.remote_endpoint().address().to_string());
-                std::thread(&HttpServer::handle_request, this, std::move(socket)).detach();
-            } else {
-                LOG_WARNING("Accept error: " + ec.message());
-            }
-            accept_connections();
-        });
+    void HttpServer::stop() {
+        acceptor_.close();
     }
 
-    void HttpServer::handle_request(boost::asio::ip::tcp::socket socket) {
+    void HttpServer::acceptConnections() {
+        acceptor_.async_accept(
+            [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
+                if (!ec) {
+                    LOG_INFO("New HTTP connection from " + 
+                            socket.remote_endpoint().address().to_string());
+                    std::thread(&HttpServer::handleRequest, this, std::move(socket)).detach();
+                } else {
+                    LOG_WARNING("Accept error: " + ec.message());
+                }
+                acceptConnections();
+            });
+    }
+
+    void HttpServer::handleRequest(boost::asio::ip::tcp::socket socket) {
         try {
             boost::beast::flat_buffer buffer;
             boost::beast::http::request<boost::beast::http::string_body> req;
@@ -53,7 +61,7 @@ namespace Hermes {
                                " " + std::string(req.target()));
             
             boost::beast::http::response<boost::beast::http::string_body> res;
-            router_.handle_request(std::string(req.target()), req, res);
+            router_.handleRequest(std::string(req.target()), req, res);
     
             // 3. Отправка ответа с обработкой ошибок
             boost::beast::http::write(socket, res, ec);

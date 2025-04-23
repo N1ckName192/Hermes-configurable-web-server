@@ -1,3 +1,5 @@
-C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/Hermes-configurable-web-server.dir
+C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/Hermes.dir
+C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/Hermes_tests.dir
+C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/INSTALL.dir
 C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/nikit/OneDrive/Рабочий стол/Hermes-configurable-web-server/build/CMakeFiles/ZERO_CHECK.dir

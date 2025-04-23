@@ -34,7 +34,6 @@ namespace Hermes {
             boost::asio::ip::tcp::socket server_socket(io_context_);
             server_socket.connect(target_endpoint_);
 
-            // Двунаправленный обмен данными
             boost::asio::thread_pool pool(2);
             boost::asio::post(pool, [&] {
                 boost::asio::streambuf buf;
