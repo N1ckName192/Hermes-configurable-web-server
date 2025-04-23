@@ -74,56 +74,41 @@ function Test-Proxy {
     }
 }
 
-function Test-RawTcp {
+function Test-TcpConnection {
     param (
-        [string]$Server,
-        [int]$Port,
-        [string]$TestName
+        [string]$Server = "localhost",
+        [int]$Port = 7070
     )
-    
-    Write-ColorOutput $Cyan "Testing raw TCP: $TestName..."
-    Write-ColorOutput $White "  Server: $Server"
-    Write-ColorOutput $White "  Port: $Port"
-    
-    $tcpClient = New-Object System.Net.Sockets.TcpClient
+
+    Write-ColorOutput $Cyan "Testing TCP connection to $Server`:$Port..."
+
     try {
+        $tcpClient = New-Object System.Net.Sockets.TcpClient
         $tcpClient.Connect($Server, $Port)
         $stream = $tcpClient.GetStream()
-        $writer = New-Object System.IO.StreamWriter($stream)
-        $reader = New-Object System.IO.StreamReader($stream)
-        
-        # Test 1: Basic HTTP request
-        $writer.WriteLine("GET / HTTP/1.1")
-        $writer.WriteLine("Host: localhost")
-        $writer.WriteLine("")
-        $writer.Flush()
-        
-        $response = $reader.ReadToEnd()
-        if ($response.Contains("HTTP/1.1 200 OK")) {
-            Write-ColorOutput $Green "  ✓ PASS: Basic HTTP request successful"
-        } else {
-            Write-ColorOutput $Red "  ✗ FAIL: Invalid HTTP response"
-            return $false
-        }
-        
-        # Test 2: Raw TCP data
-        $writer.WriteLine("PING")
-        $writer.Flush()
-        
-        $response = $reader.ReadLine()
-        if ($response -eq "PONG") {
-            Write-ColorOutput $Green "  ✓ PASS: Raw TCP communication successful"
-        } else {
-            Write-ColorOutput $Red "  ✗ FAIL: Raw TCP communication failed"
-            return $false
-        }
-        
-        return $true
-    } catch {
-        Write-ColorOutput $Red "  ✗ FAIL: $($_.Exception.Message)"
-        return $false
-    } finally {
+
+        # Отправляем PING
+        $bytes = [System.Text.Encoding]::ASCII.GetBytes("PING")
+        $stream.Write($bytes, 0, $bytes.Length)
+        $stream.Flush()
+
+        # Читаем ответ
+        $response = New-Object byte[] 4
+        $bytesRead = $stream.Read($response, 0, $response.Length)
+        $text = [System.Text.Encoding]::ASCII.GetString($response, 0, $bytesRead)
+
         $tcpClient.Close()
+
+        if ($text -eq "PONG") {
+            Write-ColorOutput $Green "✓ TCP test passed - received PONG response"
+            return $true
+        } else {
+            Write-ColorOutput $Red "✗ TCP test failed - unexpected response: $text"
+            return $false
+        }
+    } catch {
+        Write-ColorOutput $Red "✗ TCP test failed - $($_.Exception.Message)"
+        return $false
     }
 }
 
@@ -148,10 +133,10 @@ $allTestsPassed = $allTestsPassed -and (Test-Proxy "http://localhost:9090/test" 
 $allTestsPassed = $allTestsPassed -and (Test-Proxy "http://localhost:9090/work" "http://localhost:8080/work" "Work Endpoint")
 $allTestsPassed = $allTestsPassed -and (Test-Proxy "http://localhost:9090/static/index.html" "http://localhost:8080/static/index.html" "Static Files")
 
-# Raw TCP Tests
-Write-ColorOutput $White "`n=== Raw TCP Tests ==="
-$allTestsPassed = $allTestsPassed -and (Test-RawTcp "localhost" 8080 "HTTP Server")
-$allTestsPassed = $allTestsPassed -and (Test-RawTcp "localhost" 9090 "Proxy Server")
+# TCP Tests
+Write-ColorOutput $White "`n=== TCP Tests ==="
+$tcpTest = Test-TcpConnection
+$allTestsPassed = $allTestsPassed -and $tcpTest
 
 # Summary
 Write-ColorOutput $White "`n=== Test Summary ==="

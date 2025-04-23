@@ -56,6 +56,68 @@ namespace Hermes {
             return allPassed;
         }
     }
+
+    class TcpServer {
+    public:
+        TcpServer(boost::asio::io_context& io_context, const boost::asio::ip::tcp::endpoint& endpoint)
+            : io_context_(io_context), acceptor_(io_context, endpoint) {
+            LOG_INFO("TCP server initialized on port " + std::to_string(endpoint.port()));
+        }
+
+        void start() {
+            acceptConnections();
+        }
+
+    private:
+        void acceptConnections() {
+            acceptor_.async_accept(
+                [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
+                    if (!ec) {
+                        LOG_INFO("New TCP connection from " + 
+                                socket.remote_endpoint().address().to_string());
+                        std::thread(&TcpServer::handleConnection, this, std::move(socket)).detach();
+                    }
+                    acceptConnections();
+                });
+        }
+
+        void handleConnection(boost::asio::ip::tcp::socket socket) {
+            try {
+                LOG_INFO("TCP connection established");
+                std::array<char, 1024> buffer;
+                boost::system::error_code ec;
+
+                while (!ec) {
+                    LOG_INFO("Waiting for data...");
+                    size_t bytes = socket.read_some(boost::asio::buffer(buffer), ec);
+                    if (ec) {
+                        LOG_WARNING("Read error: " + ec.message());
+                        break;
+                    }
+
+                    std::string message(buffer.data(), bytes);
+                    LOG_INFO("Received " + std::to_string(bytes) + " bytes: '" + message + "'");
+
+                    if (message == "PING") {
+                        LOG_INFO("Sending PONG response");
+                        const char* pong = "PONG";
+                        boost::asio::write(socket, boost::asio::buffer(pong, 4), ec);
+                        if (ec) {
+                            LOG_WARNING("Write error: " + ec.message());
+                            break;
+                        }
+                        LOG_INFO("PONG sent successfully");
+                    }
+                }
+            } catch (const std::exception& e) {
+                LOG_WARNING("TCP error: " + std::string(e.what()));
+            }
+            LOG_INFO("TCP connection closed");
+        }
+
+        boost::asio::io_context& io_context_;
+        boost::asio::ip::tcp::acceptor acceptor_;
+    };
 }
 
 int main() {
@@ -116,6 +178,7 @@ int main() {
 
         const unsigned short http_port = 8080;
         const unsigned short proxy_port = 9090;
+        const unsigned short tcp_port = 7070;
         const std::string proxy_target = "localhost:" + std::to_string(http_port);
 
         Hermes::HttpServer http_server(
@@ -134,6 +197,13 @@ int main() {
         proxy_server.start();
         LOG_INFO("Proxy server started on port " + std::to_string(proxy_port) + 
                 " forwarding to " + proxy_target);
+
+        Hermes::TcpServer tcp_server(
+            io_context,
+            boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), tcp_port)
+        );
+        tcp_server.start();
+        LOG_INFO("TCP server started on port " + std::to_string(tcp_port));
 
         LOG_INFO("All services initialized successfully. Starting event loop...");
         io_context.run();
