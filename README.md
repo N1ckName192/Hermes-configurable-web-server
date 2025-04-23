@@ -25,45 +25,11 @@ cmake ..
 cmake --build . --config Release
 ```
 
-## Конфигурация
-
-Настройка сервера выполняется через JSON-файл. Пример конфигурации:
-
-```json
-{
-    "server": {
-        "host": "0.0.0.0",
-        "port": 8080,
-        "threads": 4
-    },
-    "routes": [
-        {
-            "path": "/",
-            "type": "static",
-            "content": "Привет от Hermes!",
-            "content_type": "text/plain"
-        },
-        {
-            "path": "/test",
-            "type": "json",
-            "content": "{\"status\":\"success\"}"
-        },
-        {
-            "path": "/work",
-            "type": "text",
-            "content": "Сервер работает корректно!"
-        }
-    ]
-}
-```
-
 ## Запуск
 
 ```bash
-./Hermes [путь_к_конфигу]
+./Hermes
 ```
-
-Если путь к конфигу не указан, сервер будет искать файл `hermes.json` в текущей директории.
 
 ## Типы маршрутов
 
