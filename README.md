@@ -1,93 +1,115 @@
-# Hermes - Configurable Web Server
+# Hermes - конфигурируемый веб-сервер
 
-## Overview
-Hermes is a high-performance, configurable web server written in modern C++20. Built on top of Boost.Beast and Boost.Asio, it provides a robust foundation for handling HTTP, routing, proxying, and raw TCP connections. The server follows SOLID principles and implements a clean, modular architecture.
+Hermes — это высокопроизводительный веб-сервер на C++, поддерживающий HTTP, маршрутизацию, проксирование и чистый TCP. Он построен с использованием библиотек Boost.Beast (для HTTP) и Boost.Asio (для асинхронного ввода-вывода).
 
-## Key Features
-- **HTTP/1.1 Support**: Full implementation of HTTP/1.1 protocol
-- **Flexible Routing**: Dynamic route configuration with pattern matching
-- **Proxy Support**: Built-in reverse proxy capabilities
-- **Raw TCP**: Low-level TCP socket handling
-- **Asynchronous I/O**: Non-blocking operations using Boost.Asio
-- **Thread Pool**: Efficient request handling with configurable thread pool
-- **Configuration**: JSON-based configuration system
-- **Logging**: Comprehensive logging system with multiple levels
-- **Metrics**: Built-in performance monitoring
+## Возможности
 
-## Architecture
-The server follows a layered architecture:
-- **Network Layer**: Handles low-level socket operations
-- **Protocol Layer**: Implements HTTP and TCP protocols
-- **Routing Layer**: Manages request routing and handlers
-- **Application Layer**: Business logic and custom handlers
+- **HTTP-сервер**: Полноценная поддержка HTTP/1.1 с асинхронной обработкой запросов
+- **Маршрутизация**: Гибкая система маршрутизации HTTP-запросов с различными типами обработчиков
+- **TCP-сервер**: Поддержка чистых TCP-соединений для низкоуровневых протоколов
+- **Проксирование**: Возможность проксировать запросы на другие серверы
+- **Многопоточность**: Эффективное использование нескольких потоков для обработки запросов
+- **JSON-конфигурация**: Настройка сервера через понятный JSON-файл
 
-## Design Patterns
-- Factory Method for handler creation
-- Strategy for different protocol implementations
-- Observer for event handling
-- Singleton for configuration management
-- Command for request processing
-- Chain of Responsibility for middleware
+## Требования
 
-## Requirements
-- C++20 compatible compiler
-- CMake 3.15+
-- Boost 1.75+
-- OpenSSL (optional, for HTTPS support)
+- C++20 совместимый компилятор (GCC 10+, Clang 10+, MSVC 2019+)
+- CMake 3.15 или выше
+- Boost 1.75.0 или выше
 
-## Building
+## Сборка
+
 ```bash
-mkdir build && cd build
+mkdir build
+cd build
 cmake ..
-cmake --build .
+cmake --build . --config Release
 ```
 
-## Configuration
+## Конфигурация
+
+Настройка сервера выполняется через JSON-файл. Пример конфигурации:
+
 ```json
 {
     "server": {
+        "host": "0.0.0.0",
         "port": 8080,
-        "threads": 4,
-        "timeout": 30
+        "threads": 4
+    },
+    "features": {
+        "http": true,
+        "tcp": true,
+        "proxy": true
     },
     "routes": [
         {
-            "path": "/api/*",
-            "handler": "api_handler"
+            "path": "/",
+            "type": "static",
+            "content": "Привет от Hermes!",
+            "content_type": "text/plain; charset=utf-8"
+        },
+        {
+            "path": "/api/echo",
+            "type": "echo"
+        },
+        {
+            "path": "/api/time",
+            "type": "time"
+        },
+        {
+            "path": "/proxy",
+            "type": "proxy",
+            "target": "http://example.com"
         }
     ]
 }
 ```
 
-## Usage Example
-```cpp
-#include <hermes/server.hpp>
+## Запуск
 
-int main() {
-    hermes::Server server;
-    server.configure("config.json");
-    server.start();
-    return 0;
-}
+```bash
+./Hermes [путь_к_конфигу]
 ```
 
-## Performance
-- Handles 10,000+ concurrent connections
-- Sub-millisecond response times
-- Memory-efficient connection handling
+Если путь к конфигу не указан, сервер будет искать файл `hermes.json` в текущей директории.
 
-## Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request
+## Типы маршрутов
 
-## License
-MIT License
+Hermes поддерживает следующие типы маршрутов:
 
-## Author
-[Your Name]
+1. **static** - статический контент, задаваемый в конфигурации
+2. **echo** - возвращает тело запроса обратно клиенту
+3. **time** - возвращает текущее время сервера
+4. **proxy** - проксирует запрос на указанный target-сервер
 
-## Acknowledgments
-- Boost.Beast
-- Boost.Asio
-- OpenSSL
+## Архитектура
+
+Hermes построен на модульной архитектуре с четким разделением ответственности:
+
+- **Config** - загрузка и хранение конфигурации
+- **Logger** - простая система логирования
+- **Router** - маршрутизация HTTP-запросов к соответствующим обработчикам
+- **HttpServer** - обработка HTTP-соединений с использованием Boost.Beast
+- **TcpServer** - обработка чистых TCP-соединений с использованием Boost.Asio
+- **ProxyHandler** - проксирование HTTP-запросов на внешние серверы
+
+## Особенности реализации
+
+- Асинхронная обработка запросов для высокой производительности
+- Эффективное использование пула потоков для параллельной обработки запросов
+- Корректная обработка сигналов для graceful shutdown
+- Четкое разделение между HTTP и TCP обработкой
+
+## Использование для разработки
+
+Сервер можно использовать для:
+- Быстрого прототипирования веб-приложений
+- Реализации API-серверов
+- Создания прокси-серверов
+- Низкоуровневых TCP-служб
+- Балансировки нагрузки
+
+## Лицензия
+
+Свободно распространяемое ПО. Используйте на свой страх и риск.
