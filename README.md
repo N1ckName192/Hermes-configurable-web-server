@@ -1,6 +1,6 @@
 # Hermes - Конфигурируемый веб-сервер
 
-![20250423_2050_Логотип Hermes Веб-сервер_simple_compose_01jshw9156epms8ejnt4017tdg](https://github.com/user-attachments/assets/d2a5c573-1755-460e-ab97-c88cf96e9bde)
+![20250423_2050_Логотип Hermes Веб-сервер_simple_compose_01jshw9156epms8ejnt4017tdg](https://github.com/user-attachments/assets/7bab0b1e-7c3f-4d5e-9e8d-a4db9671e7bf)
 
 Hermes — это веб-сервер на C++, поддерживающий HTTP-маршрутизацию, проксирование и обработку статических файлов. Построен с использованием Boost.Beast для HTTP и Boost.Asio для асинхронного ввода-вывода.
 
@@ -74,6 +74,10 @@ Hermes построен на модульной архитектуре с чет
 - Создания прокси-серверов
 - Низкоуровневых TCP-служб
 - Балансировки нагрузки
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/74319998-2f88-4709-b38d-a54d730a9817" alt="20250423_2131_Гермеc с веб-сервером_simple_compose_01jshykrs2e2vtpxyj1xpfnfb0" width="400"/>
+</div>
 
 ## Лицензия
 
